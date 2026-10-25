@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sources
+{% endblock %}
+
+{% block main %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form action="/sources" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="csv_file">Choose a CSV file:</label>
+            <input id="csv_file" type="file" name="feedback_raw" accept=".csv" required>
+        </div>
+        <button class="btn btn-dark" type="submit">Upload CSV</button>
+    </form>
+
+
+    {% if errors %}
+        <p style="color: red; text-align: left;">Upload Error(s): {{ error_count }}</p>
+        <table class="table">
+            <tr>
+            <th>Row</th>
+            <th>Data</th>
+            <th>Error</th>
+            </tr>
+            {% for e in errors %}
+            <tr>
+                <td>{{ e.row }}</td>
+                <td>{{ e.data }}</td>
+                <td>{{ e.error }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+{% endblock %}

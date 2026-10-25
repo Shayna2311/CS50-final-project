@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Feedback
+{% endblock %}
+
+{% block main %}
+    <form id="filter-form" method="GET" action="/feedback"></form>
+
+    <div style="text-align: right;">
+        {% if page > 1 %}
+            <a href="/feedback?page={{ page - 1 }}{% if rating %}&rating={{ rating }}{% endif %}{% if sentiment %}&sentiment={{ sentiment }}{% endif %}{% if topic %}&topic={{ topic }}{% endif %}{% if tag %}&tag={{ tag }}{% endif %}">Previous</a>
+        {% endif %}
+
+        <span>
+            {% for p in range(start_page, end_page + 1) %}
+                <a href="/feedback?page={{ p }}{% if rating %}&rating={{ rating }}{% endif %}{% if sentiment %}&sentiment={{ sentiment }}{% endif %}{% if topic %}&topic={{ topic }}{% endif %}{% if tag %}&tag={{ tag }}{% endif %}"
+                    {% if p == page %} style="font-weight:bold;" {% endif %}>
+                    {{ p }}
+                </a>
+            {% endfor %}
+            </span>
+
+        {% if page < total_pages %}
+            <a href="/feedback?page={{ page + 1 }}{% if rating %}&rating={{ rating }}{% endif %}{% if sentiment %}&sentiment={{ sentiment }}{% endif %}{% if topic %}&topic={{ topic }}{% endif %}{% if tag %}&tag={{ tag }}{% endif %}">Next</a>
+        {% endif %}
+    </div>
+
+    <table class="table" style="text-align: left;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Source</th>
+                <th>Created At</th>
+                <th>Feedback</th>
+                <th class="{% if rating %}filter-active{% endif %}">
+                    <span>Rating</span>
+                    <select name="rating" form="filter-form" onchange="this.form.submit()">
+                        <option value="">All</option>
+                        {% for option in ratings %}
+                            <option value="{{ option.rating }}"
+                                {% if rating == option.rating %}selected{% endif %}>
+                                {{ option.rating }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th>Vote</th>
+                <th class="{% if sentiment %}filter-active{% endif %}">
+                    <span>Sentiment</span>
+                    <select name="sentiment" form="filter-form" onchange="this.form.submit()">
+                        <option value="">All</option>
+                        {% for option in sentiments %}
+                            <option value="{{ option.sentiment }}"
+                                {% if sentiment == option.sentiment %}selected{% endif %}>
+                                {{ option.sentiment }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </th>
+                <th class="{% if tag %}filter-active{% endif %}">
+                    <span>Tag</span>
+                    <select name="tag" form="filter-form" onchange="this.form.submit()">
+                        <option value="">All</option>
+                        {% for option in tags %}
+                            <option value="{{ option.tag }}"
+                                {% if tag == option.tag %}selected{% endif %}>
+                                {{ option.tag }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </th>
+
+                <th class="{% if topic %}filter-active{% endif %}">
+                    <span>Topic</span>
+                    <select name="topic" form="filter-form" onchange="this.form.submit()">
+                        <option value="">All</option>
+                        {% for option in topics %}
+                            <option value="{{ option.topic }}"
+                                {% if topic == option.topic %}selected{% endif %}>
+                                {{ option.topic }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in feedback %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.source }}</td>
+                    <td>{{ row.created_at }}</td>
+                    <td>{{ row.feedback_text }}</td>
+                    <td>{{ row.rating }}</td>
+                    <td>{{ row.feature_vote }}</td>
+                    <td>{{ row.sentiment }}</td>
+                    <td>{{ row.tag }}</td>
+                    <td>{{ row.topic }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

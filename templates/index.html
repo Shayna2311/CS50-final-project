@@ -1,0 +1,260 @@
+{% extends "layout.html" %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const topicCtx = document.getElementById('topicChart');
+            const topicData = {{ topic_counts | tojson }};
+            new Chart(topicCtx, {
+                type: 'bar',
+                data: {
+                    labels: topicData.map(item => item.topic),
+                    datasets: [{
+                        data: topicData.map(item => item.count)
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    backgroundColor: '#000000',
+                    onHover: (event, chartElement) => {
+                        event.native.target.style.cursor =
+                            chartElement.length ? 'pointer' : 'default';
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const topic = topicData[index].topic;
+
+                            window.location.href = `/feedback?topic=${topic}`;
+                        }
+                    }
+                }
+            });
+
+            const sentimentCtx = document.getElementById('sentimentChart');
+            const sentimentData = {{ sentiment_counts | tojson }};
+            new Chart(sentimentCtx, {
+                type: 'pie',
+                plugins: [ChartDataLabels],
+                data: {
+                    labels: sentimentData.map(item => item.sentiment),
+                    datasets: [{
+                        data: sentimentData.map(item => item.count)
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        datalabels: {
+                            color: '#FFFFFF',
+                            formatter: (value, context) => {
+                                const total = context.chart.data.datasets[0].data
+                                    .reduce((a, b) => a + b, 0);
+
+                                return Math.round((value / total) * 100) + '%';
+                            }
+                        }
+                    },
+                    backgroundColor: [
+                       '#111111',
+                       '#6B7280',
+                       '#2563EB'
+                    ],
+                    onHover: (event, chartElement) => {
+                        event.native.target.style.cursor =
+                            chartElement.length ? 'pointer' : 'default';
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const sentiment = sentimentData[index].sentiment;
+
+                            window.location.href = `/feedback?sentiment=${sentiment}`;
+                        }
+                    }
+                }
+            });
+
+            const tagCtx = document.getElementById('tagChart');
+            const tagData = {{ tag_counts | tojson }};
+            new Chart(tagCtx, {
+                type: 'doughnut',
+                plugins: [ChartDataLabels],
+                data: {
+                    labels: tagData.map(item => item.tag),
+                    datasets: [{
+                        data: tagData.map(item => item.count)
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        datalabels: {
+                            color: '#FFFFFF',
+                            display: (context) => {
+                                const data = context.chart.data.datasets[0].data;
+                                const value = data[context.dataIndex];
+                                const total = data.reduce((a, b) => a + b, 0);
+
+                                return (value / total) * 100 >= 5;
+                            },
+                            formatter: (value, context) => {
+                                const total = context.chart.data.datasets[0].data
+                                    .reduce((a, b) => a + b, 0);
+
+                                return Math.round((value / total) * 100) + '%';
+                            }
+                        }
+                    },
+                    backgroundColor: [
+                        '#2563EB',
+                        '#111111',
+                        '#7C3AED',
+                        '#6B7280',
+                        '#0D9488'
+                    ],
+                    onHover: (event, chartElement) => {
+                        event.native.target.style.cursor =
+                            chartElement.length ? 'pointer' : 'default';
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const tag = tagData[index].tag;
+
+                            window.location.href = `/feedback?tag=${tag}`;
+                        }
+                    }
+                }
+            });
+
+            const ratingCtx = document.getElementById('ratingChart');
+            const ratingData = {{ rating_counts | tojson }};
+            new Chart(ratingCtx, {
+                type: 'bar',
+                data: {
+                    labels: ratingData.map(item => item.rating),
+                    datasets: [{
+                        data: ratingData.map(item => item.count)
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    backgroundColor: '#000000',
+                    onHover: (event, chartElement) => {
+                        event.native.target.style.cursor =
+                            chartElement.length ? 'pointer' : 'default';
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const rating = ratingData[index].rating;
+
+                            window.location.href = `/feedback?rating=${rating}`;
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block main %}
+    <div class="dashboard">
+
+        <!-- Row 1 -->
+        <div class="row">
+            <div class="widget medium">
+                <div class="widget-title">Top Topics</div>
+                <div class="widget-subtitle">See what your users are saying</div>
+                <div class="widget-chart">
+                    <canvas id="topicChart"></canvas>
+                </div>
+            </div>
+
+            <div class="widget small">
+                <div class="widget-title">AI Insights Summary</div>
+                <div class="widget-subtitle">
+                    Generated using OpenAI. <a class="custom-link" href="/insights">Dive Deeper</a>
+                </div>
+                <div class="widget-chart">
+                    {{ summary }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="row">
+            <div class="widget small">
+                <div class="widget-title">Sentiment Breakdown</div>
+                <div class="widget-subtitle">Distribution of Positive, Neutral, and Negative feedback</div>
+                <div class="widget-chart" style="width:300px; height:300px;">
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+            </div>
+
+            <div class="widget small">
+                <div class="widget-title">Ratings</div>
+                <div class="widget-subtitle">Distribution of user ratings across all responses</div>
+                <div class="widget-chart">
+                    <canvas id="ratingChart"></canvas>
+                </div>
+            </div>
+
+            <div class="widget small">
+                <div class="widget-title">Tag Distribution</div>
+                <div class="widget-subtitle">Distribution of feedback type across all responses</div>
+                <div class="widget-chart" style="width:300px; height:300px;">
+                    <canvas id="tagChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="widget large">
+            <div class="widget-title">Recent Feedback</div>
+            <div class="widget-subtitle">
+                Total Feedback: {{ total_rows }}
+                <br>
+                <a class="custom-link" href="/feedback">View All</a>
+            </div>
+            <div class="widget-chart">
+                <table class="table">
+                    <tr>
+                        <th>Source</th>
+                        <th>Created At</th>
+                        <th>Feedback</th>
+                        <th>Rating</th>
+                        <th>Vote</th>
+                    </tr>
+
+                    {% for row in recent_feedback %}
+                        <tr>
+                            <td>{{ row.source }}</td>
+                            <td>{{ row.created_at }}</td>
+                            <td>{{ row.feedback_text }}</td>
+                            <td>{{ row.rating }}</td>
+                            <td>{{ row.feature_vote }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

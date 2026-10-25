@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Error
+{% endblock %}
+
+{% block main %}
+    <!-- "https://www.flaticon.com/free-icons/error" -->
+    <div style="margin-top: 200px; display: flex; align-items: center; justify-content: center; gap: 50px;">
+        <img alt="{{ error.description }}" src="/static/images/error.png" style="width: 5%;">
+        <div style="text-align: left">
+            {% if error.code %}
+                <h1>Error {{ error.code }}</h1>
+                <p>{{ error.description }}</p>
+            {% else %}
+                <h1>Error 500</h1>
+                <p>Internal Server Error.</p>
+            {% endif %}
+            <a href="/" class="custom-link">Return to Dashboard</a>
+        </div>
+    </div>
+{% endblock %}

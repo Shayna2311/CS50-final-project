@@ -1,0 +1,184 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Insights
+{% endblock %}
+
+{% block main %}
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>AI Insights</h1>
+
+        <form action="/insights" method="post">
+            <button type="submit" class="btn btn-dark">↻ Generate AI Insights</button>
+        </form>
+    </div>
+
+    {% if llm_output %}
+        <!-- Metadata -->
+        <div class="text-start small text-secondary mb-5">
+            <span>Generated At: {{ llm_output[0].generated_at }}</span>
+            <span class="mx-2">•</span>
+            <span>Model: GPT-5.1</span>
+        </div>
+
+        <!-- Executive Summary -->
+        <div class="text-start mb-5">
+            <h4>Executive Summary</h2>
+            <div class="border-start border-3 ps-4">
+                <p>{{ llm_output[0].summary }}</p>
+            </div>
+        </div>
+
+
+        <!-- Key Issues -->
+        <div class="text-start mb-5">
+
+            <h4>Key Issues</h2>
+
+            <div class="row">
+
+                {% for issue in issues %}
+                    <div class="card shadow-sm small p-4">
+                        <div class="d-flex gap-3">
+
+                            <div>
+                                {{ loop.index }}
+                            </div>
+
+                            <div>
+
+                                <h5>
+                                    {{ issue.title }}
+                                </h5>
+
+                                <p class="text-muted mb-0">
+                                    {{ issue.explanation }}
+                                </p>
+                                
+                                <br>
+
+                                <p class="text-muted mb-0">
+                                    Evidence: {{ issue.evidence }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- Recommendations -->
+        <div class="text-start mb-5">
+
+            <h4>Recommended Actions</h2>
+
+            <div class="row">
+
+                {% for recommendation in recommendations %}
+
+                <div class="card shadow-sm p-4">
+
+                    <div class="d-flex gap-3">
+
+                        <div>
+                            {{ loop.index }}
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                {{ recommendation.title }}
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                {{ recommendation.explanation }}
+                            </p>
+
+                            <br>
+
+                            <p class="text-muted mb-0">
+                                Evidence: {{ recommendation.evidence }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- Methodology
+        <section class="mb-5">
+
+            <h2 class="section-title">
+                About These Insights
+            </h2>
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <p>
+                        The AI insights are generated using existing analytics
+                        from the customer feedback dataset alongside selected
+                        examples of customer feedback.
+                    </p>
+
+                    <p class="mb-0">
+                        Statistical and NLP metrics shown on the dashboard are
+                        calculated separately. The AI is used to interpret
+                        these results and provide potential findings and
+                        recommendations rather than replacing the underlying
+                        analytics.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        Refresh information
+        <section class="mb-5">
+
+            <div class="alert alert-light border">
+
+                <strong>Want to update the analysis?</strong>
+
+                <span class="ms-1">
+                    Click "Refresh AI Insights" above to generate a new
+                    analysis using the latest feedback data.
+                </span>
+
+            </div>
+
+        </section>
+        </div>
+        -->
+
+        {% else %}
+            <div class="empty-state shadow-sm">
+
+            <h2>No AI insights yet</h2>
+
+            <p class="text-muted">Generate your first AI analysis using the available customer feedback.</p>
+
+        </div>
+
+        {% endif %}
+
+{% endblock %}

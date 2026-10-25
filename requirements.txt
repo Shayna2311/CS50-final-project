@@ -1,0 +1,9 @@
+cs50
+Flask
+Flask-Session
+python-dotenv
+nltk
+openai
+scikit-learn
+transformers
+torch
