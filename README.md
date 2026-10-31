@@ -113,9 +113,6 @@ Key outputs:
 **LLM**
 - OpenAI
 
-**Hosting / Deployment**
-- Render
-
 ## What I Learned
 Building InsightFlow involved applying concepts across software development, data analysis, NLP, and product management.
 
@@ -130,7 +127,6 @@ Key areas I worked with include:
 - Integrating an AI / LLM API
 - Designing a SQLite database
 - Data Visualisation with Chart.js
-- Deploying a web application
 
 ## Future Improvements
 InsightFlow was designed as a Minimum Viable Product (MVP) to demonstrate how unstructured customer feedback can be transformed into actionable product insights. At the beginning of the project, the Good, Better, and Best goals were defined, with the final submission aligning most closely with the Better outcome.
