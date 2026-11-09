@@ -9,3 +9,7 @@ __pycache__/
 
 # Flask
 instance/
+.flask_session_data/
+
+#VS Code
+.vscode/

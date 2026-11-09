@@ -7,19 +7,19 @@
 {% block main %}
     <form id="filter-form" method="GET" action="/feedback"></form>
 
-    <div style="text-align: right;">
+    <div class="pagination">
         {% if page > 1 %}
             <a href="/feedback?page={{ page - 1 }}{% if rating %}&rating={{ rating }}{% endif %}{% if sentiment %}&sentiment={{ sentiment }}{% endif %}{% if topic %}&topic={{ topic }}{% endif %}{% if tag %}&tag={{ tag }}{% endif %}">Previous</a>
         {% endif %}
 
-        <span>
+        <span class="page-numbers">
             {% for p in range(start_page, end_page + 1) %}
-                <a href="/feedback?page={{ p }}{% if rating %}&rating={{ rating }}{% endif %}{% if sentiment %}&sentiment={{ sentiment }}{% endif %}{% if topic %}&topic={{ topic }}{% endif %}{% if tag %}&tag={{ tag }}{% endif %}"
-                    {% if p == page %} style="font-weight:bold;" {% endif %}>
+                <a href="/feedback?page={{ p }}{% if rating %}&rating={{ rating }}{% endif %}{% if sentiment %}&sentiment={{ sentiment }}{% endif %}{% if topic %}&topic={{ topic }}{% endif %}{% if tag %}&tag={{ tag }}{% endif %}"{% if p == page %}{% endif %}
+                    class="{% if p == page %}active{% else %}inactive{% endif %}">
                     {{ p }}
                 </a>
             {% endfor %}
-            </span>
+        </span>
 
         {% if page < total_pages %}
             <a href="/feedback?page={{ page + 1 }}{% if rating %}&rating={{ rating }}{% endif %}{% if sentiment %}&sentiment={{ sentiment }}{% endif %}{% if topic %}&topic={{ topic }}{% endif %}{% if tag %}&tag={{ tag }}{% endif %}">Next</a>

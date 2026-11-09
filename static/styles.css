@@ -16,6 +16,33 @@
     text-align: left;
 }
 
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+}
+
+.page-numbers a {
+    margin: 0 6px;
+    text-decoration: none;
+}
+
+.page-numbers a.active {
+    color: black;
+    font-weight: bold;
+}
+
+.page-numbers a.inactive {
+    color: grey;
+}
+
+.pagination > a {
+    color: grey;
+    text-decoration: none;
+    margin: 0 8px;
+}
+
 th {
     white-space: nowrap;
 }
@@ -26,6 +53,7 @@ th select {
     width: 20px;
     height: 24px;
     vertical-align: middle;
+    font-size: 0;
 }
 
 th.filter-active {
